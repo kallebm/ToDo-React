@@ -1,0 +1,18 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+  font-family: Helvetica;
+}
+
+body {
+  background: linear-gradient(
+    195deg,
+    rgba(163, 159, 219, 1) 0%,
+    rgba(122, 122, 213, 1) 60%,
+    rgba(120, 111, 204, 1) 100%
+  );
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
