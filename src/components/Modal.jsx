@@ -1,7 +1,43 @@
 import React, { useState } from "react";
 import styles from "./Modal.module.css";
 
-const Modal = ({ setModalIsOpen, handleEdit, task, setTask }) => {
+const Modal = ({
+  setModalIsOpen,
+  task,
+  taskList,
+  setTaskList,
+  handleDelete,
+  setLoading,
+}) => {
+  const [editedTask, setEditedTask] = useState(task);
+
+  const handleEdit = async () => {
+    if (editedTask.title === "") {
+      handleDelete();
+      setModalIsOpen(false);
+      return;
+    }
+    setLoading(true);
+    const response = await fetch(`http://localhost:5001/todos/${task.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(editedTask),
+    });
+
+    if (response.ok) {
+      setModalIsOpen(false);
+      const uptadedList = taskList.map((t) =>
+        t.id === task.id ? editedTask : t
+      );
+      setTaskList(uptadedList);
+      setLoading(false);
+    } else {
+      throw new Error();
+    }
+  };
+
   return (
     <>
       <div className={styles.darkBG} onClick={() => setModalIsOpen(false)} />
@@ -17,26 +53,20 @@ const Modal = ({ setModalIsOpen, handleEdit, task, setTask }) => {
             <input
               type="text"
               placeholder="Edite..."
-              value={task.title}
-              onChange={(e) =>
-                setTask({
-                  ...task,
-                  title: e.currentTarget.value,
-                })
-              }
+              value={editedTask.title}
+              onChange={(e) => {
+                setEditedTask({ ...editedTask, title: e.currentTarget.value });
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  handleEdit(task);
+                  handleEdit();
                 }
               }}
             />
           </div>
           <div className={styles.modalActions}>
             <div className={styles.actionsContainer}>
-              <button
-                className={styles.editBtn}
-                onClick={() => handleEdit(task)}
-              >
+              <button className={styles.editBtn} onClick={() => handleEdit()}>
                 Editar
               </button>
               <button
