@@ -45,9 +45,11 @@ const ToDoItem = ({ task, index, taskList, setTaskList, setLoading }) => {
   return (
     <Fragment>
       <div className={task.done ? "task done" : "task"} key={index}>
-        <p>{task.title}</p>
         <div className="task-actions">
           <i className="bx bx-check" onClick={() => handleChecked()}></i>
+        </div>
+        <p>{task.title}</p>
+        <div className="task-actions">
           <i className="bx bx-trash" onClick={() => handleDelete()}></i>
           <i className="bx bx-pencil" onClick={() => setModalIsOpen(true)}></i>
         </div>

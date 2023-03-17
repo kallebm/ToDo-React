@@ -91,6 +91,8 @@
 }
 
 .task p {
+  text-align: start;
+  width: 75%;
   font-size: 1.4rem;
   font-weight: 600;
   overflow-wrap: break-word;
@@ -104,14 +106,19 @@
   gap: 10px;
 }
 
-i {
-  font-size: 24px;
+.task-actions i {
+  font-size: 1.8rem;
   color: rgb(255, 255, 255);
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.task-actions i:hover {
+  color: green;
 }
 
 .done {
-  background-color: red;
+  background-color: rgb(38, 1, 134);
 }
 
 .done p {
