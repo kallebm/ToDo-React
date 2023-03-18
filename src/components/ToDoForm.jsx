@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { ReactComponent as Loader } from "./assets/spinner.svg";
 
-const ToDoForm = ({ taskList, setTaskList, setLoading }) => {
+const ToDoForm = ({ taskList, setTaskList }) => {
   const [title, setTitle] = useState("");
+  const [isLoadingAdd, setLoadingAdd] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,7 +15,7 @@ const ToDoForm = ({ taskList, setTaskList, setLoading }) => {
       title: title,
       done: false,
     };
-    setLoading(true);
+    setLoadingAdd(true);
     const response = await fetch("http://localhost:5001/todos", {
       method: "POST",
       body: JSON.stringify(taskData),
@@ -23,15 +25,12 @@ const ToDoForm = ({ taskList, setTaskList, setLoading }) => {
     });
 
     if (response.ok) {
-      setLoading(false);
+      setLoadingAdd(false);
       setTaskList([...taskList, taskData]);
+      setTitle("");
     }
   };
 
-  const handleChange = (e) => {
-    setTitle(e.currentTarget.value);
-    console.log(taskList);
-  };
   return (
     <div className="todo-form">
       <h2>Digite suas tarefas</h2>
@@ -43,10 +42,12 @@ const ToDoForm = ({ taskList, setTaskList, setLoading }) => {
             name="task"
             id="taskInput"
             value={title}
-            onChange={handleChange}
+            onChange={(e) => setTitle(e.currentTarget.value)}
           />
         </div>
-        <button type="submit">Adicionar tarefa</button>
+        <button type="submit" disabled={isLoadingAdd}>
+          {isLoadingAdd ? <Loader className="spinner" /> : "Adicionar tarefa"}
+        </button>
       </form>
     </div>
   );

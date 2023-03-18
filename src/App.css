@@ -46,6 +46,11 @@
 }
 
 .todo-form button {
+  max-height: 45.5px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
   padding: 0.8rem;
   border-radius: 5px;
   margin-top: 0.5rem;
@@ -57,17 +62,18 @@
   background-color: rgb(67, 67, 225);
   color: white;
   font-size: 1rem;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
+}
+
+.todo-form button:disabled {
+  background: #e7e8e9;
+  color: #9fa3a9;
+  cursor: not-allowed;
 }
 
 .todo-form button:hover {
   cursor: pointer;
   opacity: 0.8;
-}
-
-.todo-form button:active {
-  cursor: pointer;
-  opacity: 0.6;
 }
 
 .task-list {
@@ -105,11 +111,18 @@
   display: flex;
   gap: 10px;
 }
+.task-actions button {
+  border: none;
+  outline: none;
+  background: transparent;
+}
 
-.task-actions i {
+.task-actions button:nth-child(n) {
   font-size: 1.8rem;
-  color: rgb(255, 255, 255);
+  color: white;
   cursor: pointer;
+}
+.task-actions i {
   transition: all 0.3s ease;
 }
 
@@ -123,4 +136,11 @@
 
 .done p {
   text-decoration: line-through;
+}
+
+.spinner {
+  animation-name: spin;
+  animation-duration: 700ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
 }

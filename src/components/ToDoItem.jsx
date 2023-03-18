@@ -1,11 +1,14 @@
 import React, { Fragment, useState } from "react";
 import Modal from "./Modal";
+import { ReactComponent as Loader } from "./assets/spinner.svg";
 
-const ToDoItem = ({ task, index, taskList, setTaskList, setLoading }) => {
+const ToDoItem = ({ task, index, taskList, setTaskList }) => {
   const [isModalOpen, setModalIsOpen] = useState(false);
+  const [isLoadingChecked, setLoadingChecked] = useState(false);
+  const [isLoadingDelete, setLoadingDelete] = useState(false);
 
   const handleDelete = async () => {
-    setLoading(true);
+    setLoadingDelete(true);
     const response = await fetch(`http://localhost:5001/todos/${task.id}`, {
       method: "DELETE",
     });
@@ -14,7 +17,7 @@ const ToDoItem = ({ task, index, taskList, setTaskList, setLoading }) => {
       setTaskList((prevTaskList) =>
         prevTaskList.filter((t) => t.id !== task.id)
       );
-      setLoading(false);
+      setLoadingDelete(false);
     } else {
       new Error();
     }
@@ -22,7 +25,7 @@ const ToDoItem = ({ task, index, taskList, setTaskList, setLoading }) => {
 
   const handleChecked = async () => {
     const uptadedTask = { ...task, done: !task.done };
-    setLoading(true);
+    setLoadingChecked(true);
     const response = await fetch(`http://localhost:5001/todos/${task.id}`, {
       method: "PUT",
       headers: {
@@ -36,7 +39,7 @@ const ToDoItem = ({ task, index, taskList, setTaskList, setLoading }) => {
         t.id === task.id ? uptadedTask : t
       );
       setTaskList(uptadedList);
-      setLoading(false);
+      setLoadingChecked(false);
     } else {
       throw new Error();
     }
@@ -46,12 +49,29 @@ const ToDoItem = ({ task, index, taskList, setTaskList, setLoading }) => {
     <Fragment>
       <div className={task.done ? "task done" : "task"} key={index}>
         <div className="task-actions">
-          <i className="bx bx-check" onClick={() => handleChecked()}></i>
+          <button onClick={() => handleChecked()} disabled={isLoadingChecked}>
+            {isLoadingChecked ? (
+              <Loader className="spinner" disabled={true} />
+            ) : (
+              <i className="bx bx-check"></i>
+            )}
+          </button>
         </div>
         <p>{task.title}</p>
         <div className="task-actions">
-          <i className="bx bx-trash" onClick={() => handleDelete()}></i>
-          <i className="bx bx-pencil" onClick={() => setModalIsOpen(true)}></i>
+          <button onClick={() => handleDelete()} disabled={isLoadingDelete}>
+            {isLoadingDelete ? (
+              <Loader className="spinner" />
+            ) : (
+              <i className="bx bx-trash"></i>
+            )}
+          </button>
+          <button>
+            <i
+              className="bx bx-pencil"
+              onClick={() => setModalIsOpen(true)}
+            ></i>
+          </button>
         </div>
       </div>
       {isModalOpen && (
@@ -61,7 +81,6 @@ const ToDoItem = ({ task, index, taskList, setTaskList, setLoading }) => {
           taskList={taskList}
           setTaskList={setTaskList}
           handleDelete={handleDelete}
-          setLoading={setLoading}
         />
       )}
     </Fragment>

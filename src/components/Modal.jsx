@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./Modal.module.css";
+import { ReactComponent as Loader } from "./assets/spinner.svg";
 
 const Modal = ({
   setModalIsOpen,
@@ -7,9 +8,9 @@ const Modal = ({
   taskList,
   setTaskList,
   handleDelete,
-  setLoading,
 }) => {
   const [editedTask, setEditedTask] = useState(task);
+  const [isLoadingEdit, setLoadingEdit] = useState(false);
 
   const handleEdit = async () => {
     if (editedTask.title === "") {
@@ -17,7 +18,7 @@ const Modal = ({
       setModalIsOpen(false);
       return;
     }
-    setLoading(true);
+    setLoadingEdit(true);
     const response = await fetch(`http://localhost:5001/todos/${task.id}`, {
       method: "PUT",
       headers: {
@@ -32,7 +33,7 @@ const Modal = ({
         t.id === task.id ? editedTask : t
       );
       setTaskList(uptadedList);
-      setLoading(false);
+      setLoadingEdit(false);
     } else {
       throw new Error();
     }
@@ -66,8 +67,12 @@ const Modal = ({
           </div>
           <div className={styles.modalActions}>
             <div className={styles.actionsContainer}>
-              <button className={styles.editBtn} onClick={() => handleEdit()}>
-                Editar
+              <button
+                className={styles.editBtn}
+                disabled={isLoadingEdit}
+                onClick={() => handleEdit()}
+              >
+                {isLoadingEdit ? <Loader className="spinner" /> : "Editar"}
               </button>
               <button
                 className={styles.cancelBtn}
